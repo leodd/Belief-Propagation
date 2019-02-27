@@ -4,7 +4,7 @@ from itertools import product
 class BP:
     # loopy belief propagation
 
-    def __init__(self, g=None, max_prod=False):
+    def __init__(self, g, max_prod=False):
         self.g = g
         self.message = dict()
         self.points = dict()
@@ -45,9 +45,9 @@ class BP:
                 if rv_ != rv:
                     m *= self.message[(rv_, f)][joint_x[i]]
             if max_prod:
-                res = max(f.potential.get(x) * m, res)
+                res = max(f.potential.get(joint_x) * m, res)
             else:
-                res += f.potential.get(x) * m
+                res += f.potential.get(joint_x) * m
 
         return res
 
@@ -56,6 +56,8 @@ class BP:
         z = 0
         for k, v in message.items():
             z = z + v
+        if z == 0:
+            return
         for k, v in message.items():
             message[k] = v / z
 
@@ -77,7 +79,6 @@ class BP:
             for rv in f.nb:
                 m = {k: 1 for k in self.points[rv]}
                 self.message[(f, rv)] = m
-                self.message[(rv, f)] = m
 
         # BP iteration
         for i in range(iteration):

@@ -1,19 +1,13 @@
-from Graph import *
-import BP
+from VertexColoringProblem import maxprod
+import numpy as np
 
 
-class EdgePotential(Potential):
-    def __init__(self):
-        Potential.__init__(self)
+A = np.array(
+    [[0, 1, 1],
+     [1, 0, 1],
+     [1, 1, 0]]
+)
 
-    def get(self, parameters):
-        return 1 if parameters[0] != parameters[1] else 0
+w = [1, 4, 2]
 
-
-class NodePotential(Potential):
-    def __init__(self, weights):
-        Potential.__init__(self)
-        self.weights = weights
-
-    def get(self, parameters):
-        return self.weights[parameters[0]]
+print(maxprod(A, w, 10))

@@ -41,9 +41,10 @@ class F:
 
 
 class Graph:
-    def __init__(self):
-        self.rvs = set()
-        self.factors = set()
+    def __init__(self, rvs, factors):
+        self.rvs = rvs
+        self.factors = factors
+        self.init_nb()
 
     def init_nb(self):
         for rv in self.rvs:
