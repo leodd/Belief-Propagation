@@ -70,6 +70,13 @@ class BP:
     def map(self, rv):
         return max(self.points[rv], key=lambda x: self.belief(x, rv))
 
+    def prob(self, rv):
+        p = dict()
+        for x in self.points[rv]:
+            p[x] = self.belief(x, rv)
+        self.normalize_message(p)
+        return p
+
     def run(self, iteration=10):
         self.points = self.init_points()
         self.message = dict()

@@ -1,4 +1,4 @@
-from VertexColoringProblem import maxprod
+from VertexColoringProblem import sumprod, maxprod
 import numpy as np
 
 
@@ -8,6 +8,8 @@ A = np.array(
      [1, 1, 0]]
 )
 
-w = [1, 4, 2]
+w = [1, 2, 3]
 
-print(maxprod(A, w, 10))
+ps = sumprod(A, w, 10)
+for p in ps:
+    print(p)
