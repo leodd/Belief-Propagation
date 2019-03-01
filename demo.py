@@ -1,15 +1,17 @@
-from VertexColoringProblem import sumprod, maxprod
+from VertexColoringProblem import print_prob, sumprod, maxprod
 import numpy as np
 
 
 A = np.array(
-    [[0, 1, 1],
+    [[0, 1, 0],
      [1, 0, 1],
-     [1, 1, 0]]
+     [0, 1, 0]]
 )
 
-w = [1, 2, 3]
+w = [0, 1]
 
-ps = sumprod(A, w, 10)
-for p in ps:
-    print(p)
+# ps = print_prob(A, w, 10, max_prod=True)
+# for p in ps:
+#     print(p)
+
+print(sumprod(A, w, 10))

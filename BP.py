@@ -1,4 +1,5 @@
 from itertools import product
+from math import log, e
 
 
 class BP:
@@ -67,6 +68,12 @@ class BP:
             b *= self.message[(nb, rv)][x]
         return b
 
+    def factor_belief(self, x, f):
+        b = f.potential.get(x)
+        for i, nb in enumerate(f.nb):
+            b *= self.message_rv_to_f(x[i], nb, f)
+        return b
+
     def map(self, rv):
         return max(self.points[rv], key=lambda x: self.belief(x, rv))
 
@@ -76,6 +83,39 @@ class BP:
             p[x] = self.belief(x, rv)
         self.normalize_message(p)
         return p
+
+    def factor_prob(self, f):
+        p = dict()
+        param = tuple(map(lambda rv: self.points[rv], f.nb))
+        for x in product(*param):
+            p[x] = self.factor_belief(x, f)
+        self.normalize_message(p)
+        return p
+
+    def partition(self):
+        z = 0
+
+        rvs_p = dict()
+        for rv in self.g.rvs:
+            rvs_p[rv] = self.prob(rv)
+
+        for f in self.g.factors:
+            param = tuple(map(lambda rv: self.points[rv], f.nb))
+            f_p = self.factor_prob(f)
+            for joint_x in product(*param):
+                b = 1
+                for i, nb in enumerate(f.nb):
+                    b *= rvs_p[nb][joint_x[i]]
+                f_b = f_p[joint_x]
+                if f_b != 0:
+                    z += f_b * log(f.potential.get(joint_x) * b / f_b)
+
+        for rv in self.g.rvs:
+            for x in self.points[rv]:
+                b = rvs_p[rv][x]
+                z -= b * log(b)
+
+        return e ** z
 
     def run(self, iteration=10):
         self.points = self.init_points()
